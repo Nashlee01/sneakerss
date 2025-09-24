@@ -36,5 +36,24 @@ class DatabaseSeeder extends Seeder
 
         // Demo contactpersonen
         ContactPerson::factory()->count(6)->create();
+
+        // Voeg test drops toe
+        \App\Models\Drop::create([
+            'naam' => 'Zomer Sale 2025',
+            'beschrijving' => 'Grootste sale van het jaar met kortingen tot 70%!',
+            'start_datum' => now(),
+            'eind_datum' => now()->addDays(7),
+            'actief' => true,
+            'afbeelding' => null,
+        ]);
+
+        \App\Models\Drop::create([
+            'naam' => 'Nieuwe Collectie Herfst',
+            'beschrijving' => 'Bekijk onze gloednieuwe herfstcollectie',
+            'start_datum' => now()->addDays(10),
+            'eind_datum' => now()->addDays(30),
+            'actief' => true,
+            'afbeelding' => null,
+        ]);
     }
 }

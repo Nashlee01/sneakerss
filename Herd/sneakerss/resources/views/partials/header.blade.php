@@ -10,7 +10,7 @@
       <span class="brand-name">{{ config('app.name', 'App') }}</span>
     </a>
     <nav aria-label="Primaire navigatie" class="main-nav">
-      <a class="{{ $isActive('tickets') }}" href="{{ route('tickets') }}">Tickets kopen</a>
+      <a class="{{ $isActive('tickets.*') }}" href="{{ route('tickets.index') }}">Tickets kopen</a>
       <a class="{{ $isActive('stand_huren') }}" href="{{ route('stand_huren') }}">Stand huren</a>
       <a class="{{ $isActive('events') }}" href="{{ route('events') }}">Event</a>
       <a class="{{ $isActive('shop') }}" href="{{ route('shop') }}">Shoppen</a>

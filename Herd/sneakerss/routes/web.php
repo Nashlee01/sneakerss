@@ -6,6 +6,9 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactPersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StandController;
+use App\Http\Controllers\VerkoperController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\DropController;
 
 // Root route verwijst naar de Homepagina
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,7 +33,7 @@ Route::middleware(['auth', 'medewerker'])->group(function () {
     // Contactpersonen
     Route::get('/contactpersonen', [ContactPersonController::class, 'index'])->name('contactpersonen');
     Route::post('/contactpersonen', [ContactPersonController::class, 'store'])->name('contactpersonen.store');
-    Route::get('/contactpersonen/{contactpersoon}/edit', [ContactPersonControllerController::class, 'edit'])->name('contactpersonen.edit');
+    Route::get('/contactpersonen/{contactpersoon}/edit', [ContactPersonController::class, 'edit'])->name('contactpersonen.edit');
     Route::patch('/contactpersonen/{contactpersoon}', [ContactPersonController::class, 'update'])->name('contactpersonen.update');
     Route::delete('/contactpersonen/{contactpersoon}', [ContactPersonController::class, 'destroy'])->name('contactpersonen.destroy');
     
@@ -39,6 +42,24 @@ Route::middleware(['auth', 'medewerker'])->group(function () {
     Route::get('/stands/{stand}/edit', [StandController::class, 'edit'])->name('stands.edit');
     Route::patch('/stands/{stand}', [StandController::class, 'update'])->name('stands.update');
     Route::delete('/stands/{stand}', [StandController::class, 'destroy'])->name('stands.destroy');
+    
+    // Verkopers beheer
+    Route::resource('verkopers', VerkoperController::class)->except(['show']);
+});
+
+// Drops en tickets
+Route::get('/drops', [DropController::class, 'index'])->name('drops.index');
+Route::get('/drops/create', [DropController::class, 'create'])->name('drops.create')->middleware('auth');
+Route::post('/drops', [DropController::class, 'store'])->name('drops.store')->middleware('auth');
+Route::get('/drops/{drop}', [DropController::class, 'show'])->name('drops.show');
+
+// Ticket routes
+Route::prefix('tickets')->name('tickets.')->group(function () {
+    Route::get('/', [TicketController::class, 'index'])->name('index');
+    Route::get('/create/{drop}', [TicketController::class, 'create'])->name('create');
+    Route::post('/{drop}', [TicketController::class, 'store'])->name('store');
+    Route::get('/bevestiging/{referentie}', [TicketController::class, 'bevestiging'])->name('bevestiging');
+    Route::get('/bevestig/{token}', [TicketController::class, 'bevestigEmail'])->name('bevestig-email');
 });
 
 // Standen routes
@@ -66,12 +87,6 @@ Route::get('/voorwaarden', function () {
     return response('<h1>Voorwaarden</h1><p>Placeholder pagina</p>', 200)
         ->header('Content-Type', 'text/html; charset=utf-8');
 })->name('terms');
-
-// Top navigatie volgens wireframe
-Route::get('/tickets', function () {
-    return response('<h1>Tickets kopen</h1><p>Placeholder tickets pagina</p>', 200)
-        ->header('Content-Type', 'text/html; charset=utf-8');
-})->name('tickets');
 
 Route::get('/events', function () {
     return response('<h1>Events</h1><p>Placeholder events pagina</p>', 200)
